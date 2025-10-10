@@ -1,5 +1,5 @@
 <template>
-    <el-sub-menu index="1">
+    <!-- <el-sub-menu index="1">
           <template #title>
             <el-icon><location /></el-icon>
             <span>Navigator One</span>
@@ -15,8 +15,8 @@
             <template #title>item four</template>
             <el-menu-item index="1-4-1">item one</el-menu-item>
           </el-sub-menu>
-        </el-sub-menu>
-        <el-menu-item index="2">
+        </el-sub-menu> -->
+        <!-- <el-menu-item index="2">
           <el-icon><icon-menu /></el-icon>
           <span>Navigator Two</span>
         </el-menu-item>
@@ -27,11 +27,38 @@
         <el-menu-item index="4">
           <el-icon><setting /></el-icon>
           <span>Navigator Four</span>
-        </el-menu-item>
+        </el-menu-item> -->
+
+        <template v-for="(item) in props.menuData">
+          <!-- 没有子菜单 -->
+          <el-menu-item
+            v-if="!item.children || item.children.length == 0"
+            :index="`${props.index}-${item.meta.id}`"
+            :key="`${props.index}-${item.meta.id}`"
+          >
+          <el-icon size="20">
+            <component :is="item.meta.icon"></component>
+          </el-icon>
+          <span>{{ item.meta.name }}</span>
+          </el-menu-item>
+          <!-- 有子菜单 -->
+          <!-- 跳过一行esLint检查 -->
+          <!-- eslint-disable-next-line vue/valid-v-for -->
+          <el-sub-menu v-else :index="`${props.index}-${item.meta.id}`">
+            <template #title>
+              <el-icon size="20">
+                <component :is="item.meta.icon"></component>
+              </el-icon>
+              <span>{{ item.meta.name }}</span>
+            </template>
+            <tree-menu :index="`${props.index}-${item.meta.id}`" :menuData="item.children"></tree-menu>
+          </el-sub-menu>
+        </template>
+
 </template>
 
-<script lang="ts" setup>
-
+<script setup>
+const props = defineProps(['menuData','index'])
 </script>
 
 <style scoped>

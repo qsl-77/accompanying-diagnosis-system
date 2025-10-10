@@ -41,7 +41,7 @@ const router = createRouter({
         },
         {
           path: 'vppz',
-          meta: { id: '3', name: 'DIDI陪诊', icon: 'BellFilled' },
+          meta: { id: '3', name: '智能陪诊', icon: 'BellFilled' },
           children: [
             {
               path: '',

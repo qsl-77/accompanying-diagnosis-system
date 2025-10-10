@@ -7,13 +7,19 @@
       >
 
       <p class="logo-lg">智能陪护</p>
-      <TreeMenu />
+      <TreeMenu :index="1" :menuData="menuData"/>
         
       </el-menu>
 </template>
 
 <script setup>
-import treeMenu from './treeMenu.vue';
+import TreeMenu from './treeMenu.vue';
+import { useRouter } from 'vue-router';
+import { reactive } from 'vue';
+
+const router = useRouter()
+// console.log(router,'router')
+const menuData = reactive(router.options.routes[0].children)
 
 // 定义两个方法
 const handleOpen = () => {
