@@ -1,5 +1,6 @@
 <template>
     <el-menu
+        :style="{ width: '250px'}"
         default-active="2"
         class="aside-container"
         @open="handleOpen"
@@ -33,6 +34,7 @@ const handleClose = () => {
 <style lang="less" scoped>
 .aside-container{
     height: 100%;
+    padding: 20px;
     .logo-lg {
       text-align: center;
       font-size: 20px;
