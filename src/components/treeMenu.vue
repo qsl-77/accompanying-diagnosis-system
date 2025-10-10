@@ -71,5 +71,7 @@ const props = defineProps(['menuData', 'index'])
 </script>
 
 <style scoped>
-
+.el-icon {
+  color:rgb(87, 134, 87);
+}
 </style>
