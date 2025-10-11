@@ -60,10 +60,14 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 // 创建router实例
 const router = useRouter()
+
+const store = useStore()
 // 点击菜单
-const handleClick = (item,active) => {
+const handleClick = (item, active) => {
+  store.commit('addMenu',item.meta)
   router.push(item.meta.path)
 }
 const props = defineProps(['menuData', 'index'])
@@ -74,4 +78,9 @@ const props = defineProps(['menuData', 'index'])
 .el-icon {
   color:rgb(87, 134, 87);
 }
+span {
+  color: rgb(87, 134, 87);
+
+}
+
 </style>
