@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import stores from './stores'
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
@@ -18,4 +19,9 @@ app.use(createPinia())
 // 挂载router
 app.use(router)
 
+// 挂载stores
+app.use(stores)
+
 app.mount('#app')
+
+
