@@ -7,9 +7,9 @@
                 </div>
             </template>
             <div class="jump-link">
-                <el-link type="primary" @click="handleChange">{{ formType ? '返回登录' : '注册账号'}}</el-link>
+                <el-link type="primary" @click="handleChange">{{ formType ? '注册账号' : '返回登录'}}</el-link>
             </div>
-            <el-form :model="loginForm" style="max-width: 600px" class="demo-ruleForm">
+            <el-form :model="loginForm" style="max-width: 600px" class="demo-ruleForm" :rules="rules">
                 <el-form-item prop="userName">
                     <el-input v-model="loginForm.userName" placeholder="手机号" :prefix-icon="UserFilled"></el-input>
                 </el-form-item>
@@ -23,6 +23,11 @@
                             <span @click="countdownChange">{{ countdown.validText }}</span>
                         </template>
                     </el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" :style="{ width: '100%' }" @click="submitForm">
+                        {{ formType ? '返回登录' : '注册账号' }}
+                    </el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -50,6 +55,35 @@ const formType = ref(0)
 const handleChange = () => {
     formType.value = formType.value ? 0 : 1  
 }
+
+// 账号校验规则
+const validUser = (rule,value,callback) => {
+    // 不能为空
+    if (value === '') {
+        callback(new Error('请输入账号'))
+    } else {
+        const phoneReg = /^1(3[0-9]|4[01456789]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
+        phoneReg.test(value) ? callback() : callback(new Error('请输入格式正确的手机号'))
+    }
+}
+
+// 密码校验
+const validPwd = (rule,value,callback) => {
+    if (value === '') {
+        callback(new Error('密码不能为空'))
+    }
+    else {
+        const pwdReg = /^[a-zA-Z0-9_-]{4-16}$/
+        pwdReg.test(value) ? callback() : callback(new Error('请输入格式正确的密码'))
+    }
+}
+
+// 表单校验
+const rules = reactive({
+    userName: [{ validator: validUser, trigger: 'blur' }],
+    password: [{ validator: validPwd, trigger:'blur'}]
+})
+
 // 点击发送短信验证码
 const countdown = reactive({
     validText: '获取验证码',
@@ -81,6 +115,11 @@ const countdownChange = () => {
         }
     }, 1000)
     flag = true 
+}
+
+// 提交表单
+const submitForm = () => {
+    
 }
 
 </script>
