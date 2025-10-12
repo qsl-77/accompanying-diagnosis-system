@@ -35,7 +35,8 @@
 </template>
 
 <script setup>
-import { Lock, UserFilled} from '@element-plus/icons-vue';
+import {getCode} from '@/api'
+import { Lock, UserFilled } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import { reactive, ref } from 'vue';
 // 单独引入ElMessage可能不能正常显示该组件的位置和样式，还需补充引入以下文件
@@ -115,6 +116,12 @@ const countdownChange = () => {
         }
     }, 1000)
     flag = true 
+    getCode({ tel: loginForm.userName }).then(({ data }) => {
+        console.log(data,'data')
+        if (data.code === 10000) {
+            ElMessage.success('发送成功')
+        }
+    })
 }
 
 // 提交表单
