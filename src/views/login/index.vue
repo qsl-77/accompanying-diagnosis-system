@@ -7,16 +7,16 @@
                 </div>
             </template>
             <div class="jump-link">
-                <el-link type="primary" @click="handleChange">{{ formType ? '注册账号' : '返回登录'}}</el-link>
+                <el-link type="primary" @click="handleChange">{{ formType ? '返回登录' : '注册账号'}}</el-link>
             </div>
-            <el-form :model="loginForm" style="max-width: 600px" class="demo-ruleForm" :rules="rules" :ref="loginFormRef">
+            <el-form :model="loginForm" style="max-width: 600px" class="demo-ruleForm" :rules="rules" ref="loginFormRef">
                 <el-form-item prop="userName">
                     <el-input v-model="loginForm.userName" placeholder="手机号" :prefix-icon="UserFilled"></el-input>
                 </el-form-item>
-                <el-form-item prop="password">
-                    <el-input v-model="loginForm.password" type="password" placeholder="密码" :prefix-icon="Lock"></el-input>
+                <el-form-item prop="passWord">
+                    <el-input v-model="loginForm.passWord" type="password" placeholder="密码" :prefix-icon="Lock"></el-input>
                 </el-form-item>
-                <el-form-item v-if="!formType" prop="validCode">
+                <el-form-item v-if="formType" prop="validCode">
                     <el-input v-model="loginForm.validCode" placeholder="验证码" :prefix-icon="Lock">
                         <!-- 点击发送验证码 按钮 -->
                         <template #append>
@@ -25,8 +25,8 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" :style="{ width: '100%' }" @click="submitForm">
-                        {{ formType ? '返回登录' : '注册账号' }}
+                    <el-button type="primary" :style="{ width: '100%' }" @click="submitForm(loginFormRef)">
+                        {{ formType ? '注册账号' : '登录' }}
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -39,15 +39,18 @@ import {getCode,userAuthentication,login} from '@/api'
 import { Lock, UserFilled } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 // 单独引入ElMessage可能不能正常显示该组件的位置和样式，还需补充引入以下文件
 import 'element-plus/es/components/message/style/css'; 
 
 const imgUrl = new URL('../../../public/login-nav.png', import.meta.url).href
 
+const router = useRouter()
+
 // 表单数据
 const loginForm = reactive({
     userName: '',
-    password: '',
+    passWord: '',
     validCode:''
 })
 
@@ -69,12 +72,12 @@ const validUser = (rule,value,callback) => {
 }
 
 // 密码校验
-const validPwd = (rule,value,callback) => {
+const validPwd = (rule, value, callback) => {
     if (value === '') {
         callback(new Error('密码不能为空'))
     }
     else {
-        const pwdReg = /^[a-zA-Z0-9_-]{4-16}$/
+        const pwdReg = /^[a-zA-Z0-9]{4,16}$/
         pwdReg.test(value) ? callback() : callback(new Error('请输入格式正确的密码'))
     }
 }
@@ -82,7 +85,7 @@ const validPwd = (rule,value,callback) => {
 // 表单校验
 const rules = reactive({
     userName: [{ validator: validUser, trigger: 'blur' }],
-    password: [{ validator: validPwd, trigger:'blur'}]
+    passWord: [{ validator: validPwd, trigger:'blur'}]
 })
 
 // 点击发送短信验证码
@@ -120,7 +123,7 @@ const countdownChange = () => {
     }, 1000)
     flag = true 
     getCode({ tel: loginForm.userName }).then(({ data }) => {
-        console.log(data,'data')
+        // console.log(data,'data')
         if (data.code === 10000) {
             ElMessage.success('发送成功')
         }
@@ -136,11 +139,13 @@ const submitForm = async (formEl) => {
     await formEl.validate((valid, fields) => {
         if (valid) {
             console.log(loginForm, 'submit!')
+            console.log('提交的数据:', JSON.parse(JSON.stringify(loginForm)))
+            console.log('当前模式:', formType.value ? '注册' : '登录')
             // 注册页面
             if (formType.value) {
                 userAuthentication(loginForm).then(({ data }) => {
                     if (data.code === 10000) {
-                        ElMessage.success('注册成功，请返回登录')
+                        ElMessage.success('注册成功，请登录')
                         // 跳转到登录页面
                         formType.value = 0
                     }
@@ -154,14 +159,14 @@ const submitForm = async (formEl) => {
                         console.log(data)
                         // 将token和用过户信息缓存到浏览器
                         localStorage.setItem('pz_token', data.data.token)
-                        localStorage.setItem('pz_userInfo',JSON.stringify(data.data.userInfo))
+                        localStorage.setItem('pz_userInfo', JSON.stringify(data.data.userInfo))
+                        router.push('/')
                     }
                 })
             }
         }
         else {
             console.log(fields,'error submit!')
-            
         }
     })
 }

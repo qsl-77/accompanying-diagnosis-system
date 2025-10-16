@@ -28,6 +28,13 @@ http.interceptors.response.use(function (response) {
     if (response.data.code === -1) {
         ElMessage.warning(response.data.message)
     }
+    // 当token过期就清理当前路径和用户信息
+    else if (response.data.code === -2) {
+        localStorage.removeItem('pz_token')
+        localStorage.removeItem('pz_userInfo')
+        // 获取当前页面的路由并跳转
+        window.location.href = window.location.origin
+    }
     return response;
 }, function (error) {
     // 超出 2xx 范围的状态码都会触发该函数。

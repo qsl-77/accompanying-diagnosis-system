@@ -2,10 +2,23 @@
     admin
 </template>
 
-<script lang="ts" setup>
+<script setup>
+import { authAdmin } from '@/api';
+import { reactive,onMounted } from 'vue';
 
+const paginationData = reactive({
+    pageNum:1,
+    pageSize:10
+})
+
+onMounted = () => {
+    authAdmin(paginationData).then(({data}) => {
+        console.log(data,'authAdmin');
+        
+    })
+}
 </script>
 
-<style scoped>
+<style lang='less' scoped>
 
 </style>
