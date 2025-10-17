@@ -6,6 +6,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import stores from './stores'
+import PanelHead from '@/components/panelHead.vue'
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
@@ -29,6 +30,8 @@ const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key,component)
 }
+
+app.component('PanelHead', PanelHead)
 
 app.use(createPinia())
 // 挂载router
