@@ -166,7 +166,7 @@ const handleCurrentChange = () => {
 // 弹窗的显示和隐藏
 const dialogFormVisable = ref(false)
 const beforeClose = () => {
-    
+    dialogFormVisable.value = false
 }
 
 const rules = reactive({

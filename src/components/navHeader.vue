@@ -17,8 +17,8 @@
                 </li>
             </ul>
         </div>
-        <div class="header-right">
-        <el-dropdown>
+        <div class="header-right" >
+        <el-dropdown @command="handleClick">
             <div class="el-dropdown-link flex-box">
             <div>
                 <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
@@ -27,11 +27,7 @@
             </div>
             <template #dropdown>
             <el-dropdown-menu>
-                <el-dropdown-item>黄金糕</el-dropdown-item>
-                <el-dropdown-item>狮子头</el-dropdown-item>
-                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+                <el-dropdown-item command="cancel">退出</el-dropdown-item>
             </el-dropdown-menu>
             </template>
         </el-dropdown>
@@ -74,6 +70,15 @@ const closeTab = (item, index) => {
         router.push({
             path: selectMenuData[index].path
         })
+    }
+}
+
+// 退出登录
+const handleClick = (command) => {
+    if (command === "cancel") {
+        localStorage.removeItem('pz_token')
+        localStorage.removeItem('pz_userInfo')
+        window.location.href = window.location.origin
     }
 }
 </script>

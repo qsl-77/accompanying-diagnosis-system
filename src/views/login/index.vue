@@ -35,17 +35,21 @@
 </template>
 
 <script setup>
-import {getCode,userAuthentication,login} from '@/api'
+import {getCode,userAuthentication,login,menuPermissions} from '@/api'
 import { Lock, UserFilled } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
-import { reactive, ref } from 'vue';
+import { reactive, ref,computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { Store, useStore } from 'vuex';
 // 单独引入ElMessage可能不能正常显示该组件的位置和样式，还需补充引入以下文件
 import 'element-plus/es/components/message/style/css'; 
 
 const imgUrl = new URL('../../../public/login-nav.png', import.meta.url).href
 
 const router = useRouter()
+const store = useStore()
+
+const routerList = computed(() => (store.state.menu.routerList))
 
 // 表单数据
 const loginForm = reactive({
@@ -138,9 +142,8 @@ const submitForm = async (formEl) => {
     // 手动触发校验
     await formEl.validate((valid, fields) => {
         if (valid) {
+            console.log()
             console.log(loginForm, 'submit!')
-            console.log('提交的数据:', JSON.parse(JSON.stringify(loginForm)))
-            console.log('当前模式:', formType.value ? '注册' : '登录')
             // 注册页面
             if (formType.value) {
                 userAuthentication(loginForm).then(({ data }) => {
@@ -160,7 +163,11 @@ const submitForm = async (formEl) => {
                         // 将token和用过户信息缓存到浏览器
                         localStorage.setItem('pz_token', data.data.token)
                         localStorage.setItem('pz_userInfo', JSON.stringify(data.data.userInfo))
-                        router.push('/')
+                        menuPermissions().token(({ data }) => {
+                            store.commit('dynamicMenu', data.data)
+                            console.log('routerList',routerList)
+                            router.push('/')
+                        })
                     }
                 })
             }
