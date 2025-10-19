@@ -38,7 +38,7 @@
 import {getCode,userAuthentication,login,menuPermissions} from '@/api'
 import { Lock, UserFilled } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
-import { reactive, ref,computed } from 'vue';
+import { reactive, ref,computed, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
 import { Store, useStore } from 'vuex';
 // 单独引入ElMessage可能不能正常显示该组件的位置和样式，还需补充引入以下文件
@@ -163,9 +163,14 @@ const submitForm = async (formEl) => {
                         // 将token和用过户信息缓存到浏览器
                         localStorage.setItem('pz_token', data.data.token)
                         localStorage.setItem('pz_userInfo', JSON.stringify(data.data.userInfo))
-                        menuPermissions().token(({ data }) => {
+                        menuPermissions().then(({ data }) => {
                             store.commit('dynamicMenu', data.data)
-                            console.log('routerList',routerList)
+                            console.log('routerList', routerList)
+                            // 将一个响应式数据转化为普通数据
+                            toRaw(routerList.value).forEach(item => {
+                                // 添加动态路由
+                                router.addRoute('main',item)
+                            });
                             router.push('/')
                         })
                     }

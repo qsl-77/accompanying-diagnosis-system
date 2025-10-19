@@ -1,5 +1,5 @@
 <template>
-    <panel-head />
+    <panel-head :route="route"/>
     <el-table :data="tableData.list" style="width: 100%">
         <el-table-column prop="id" label="id"></el-table-column>
         <el-table-column prop="name" label="昵称"></el-table-column>
@@ -90,6 +90,9 @@
 import { authAdmin,menuSelectlist,updateUser } from '@/api';
 import { reactive, onMounted,ref } from 'vue';
 import dayjs from 'dayjs';
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
 
 // 列表数据
 const tableData = reactive({

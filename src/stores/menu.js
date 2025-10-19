@@ -1,4 +1,6 @@
-const state = {
+const localData = localStorage.getItem('pz_v3pz')
+// 拿到menu就设置，否则设置为初始数据
+const state = localData ? localData.menu :{
     // 菜单栏的展开和收起
     isCollapse: false,
     selectMenu: [],

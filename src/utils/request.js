@@ -32,6 +32,7 @@ http.interceptors.response.use(function (response) {
     else if (response.data.code === -2) {
         localStorage.removeItem('pz_token')
         localStorage.removeItem('pz_userInfo')
+        localStorage.removeItem('pz_v3pz')
         // 获取当前页面的路由并跳转
         window.location.href = window.location.origin
     }

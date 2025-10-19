@@ -1,12 +1,19 @@
 <template>
     <div class="panel-heading">
         <div class="panel-lead">
-            <div class="title"></div>
-            <p class="description">我是描述</p>
+            <!-- 动态渲染描述 -->
+            <div class="title">{{ props.route.meta.name }}</div>
+            <p class="description">{{ props.route.meta.describe }}</p>
         </div>
     </div>
 </template>
 <script setup>
+const props = defineProps({
+    route: {
+            type:Object
+        }
+    }) 
+
 </script>
 <style lang="less" scoped>
 .panel-heading{

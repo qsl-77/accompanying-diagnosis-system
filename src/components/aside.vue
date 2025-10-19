@@ -23,9 +23,11 @@ import { useStore } from 'vuex';
 
 const router = useRouter()
 // console.log(router,'router')
-const menuData = reactive(router.options.routes[0].children)
+// const menuData = reactive(router.options.routes[0].children)
 
 const store = useStore()
+const menuData = computed(() => store.state.menu.routerList)
+
 const isCollapse = computed(()=>store.state.menu.isCollapse)
 
 // 定义两个方法

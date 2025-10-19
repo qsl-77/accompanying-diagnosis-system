@@ -10,6 +10,15 @@ import PanelHead from '@/components/panelHead.vue'
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+// 刷新后的动态路由添加
+const localData = localStorage.getItem('pz_v3pz')
+if (localData) {
+    stores.commit('dynamicMenu', JSON.parse(localData).menu.routerList)
+    stores.state.menu.routerList.forEach(item => {
+        router.addRoute('main',item)
+    })
+}
+
 // 路由守卫的前置导航守卫：在进入路由前执行此回调函数
 router.beforeEach((to,from) =>{
     const token = localStorage.getItem('pz_token')
