@@ -4,7 +4,9 @@ const state = localData ? localData.menu :{
     // 菜单栏的展开和收起
     isCollapse: false,
     selectMenu: [],
-    routerList:[]
+    routerList: [],
+    // 菜单索引
+    menuActive:'1-1'
 }
 
 const mutations = {
@@ -43,6 +45,9 @@ const mutations = {
         routerSet(payload)
         //拿到完整的路由数据
         state.routerList = payload
+    },
+    updateMenuActive(state, payload) {
+        state.menuActive = payload
     }
 }
 

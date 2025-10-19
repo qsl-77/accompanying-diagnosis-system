@@ -1,11 +1,11 @@
 <template>
     <el-menu
         :style="{ width: !isCollapse ? '250px' : '70px'}"
-        default-active="2"
         class="aside-container"
         @open="handleOpen"
         @close="handleClose"
         :collapse="isCollapse"
+        :default-active="active"
       >
 
       <p class="logo-lg">{{!isCollapse ? '智能陪护' :'智陪'}}</p>
@@ -29,6 +29,8 @@ const store = useStore()
 const menuData = computed(() => store.state.menu.routerList)
 
 const isCollapse = computed(()=>store.state.menu.isCollapse)
+
+const active =computed(()=>store.state.menu.menuActive)
 
 // 定义两个方法
 const handleOpen = () => {

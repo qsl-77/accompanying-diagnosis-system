@@ -17,13 +17,14 @@
                 </li>
             </ul>
         </div>
+        <!-- 用户信息：头像+昵称 -->
         <div class="header-right" >
         <el-dropdown @command="handleClick">
             <div class="el-dropdown-link flex-box">
             <div>
-                <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                <el-avatar :src="userInfo.avatar"></el-avatar>
             </div>
-            <p class="user-name">admin</p>                
+            <p class="user-name">{{userInfo.name}}</p>                
             </div>
             <template #dropdown>
             <el-dropdown-menu>
@@ -46,6 +47,8 @@ const store = useStore()
 const route = useRoute()
 const router = useRouter()
 const selectMenu =computed(()=>store.state.menu.selectMenu)
+
+const userInfo = JSON.parse(localStorage.getItem('pz_userInfo'))
 
 const closeTab = (item, index) => {
     store.commit('closeMenu', item)

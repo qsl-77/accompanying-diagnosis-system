@@ -67,7 +67,8 @@ const router = useRouter()
 const store = useStore()
 // 点击菜单
 const handleClick = (item, active) => {
-  store.commit('addMenu',item.meta)
+  store.commit('addMenu', item.meta)
+  store.commit('updateMenuActive',active)
   router.push(item.meta.path)
 }
 const props = defineProps(['menuData', 'index'])
