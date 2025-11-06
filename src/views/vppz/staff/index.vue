@@ -1,9 +1,23 @@
 <template>
+    <panel-head :route="route"/>
     <div class="btns">
         <el-button :icon="Plus" type="primary" @click="open(null)" size="small">新增</el-button>
+        <el-popconfirm
+            width="220"
+            confirm-button-text="是"
+            cancel-button-text="否"
+            :icon="InfoFilled"
+            icon-color="#626AEF"
+            title="是否确认删除?"
+            @confirm="confirmEvent"
+        >
+        <template #reference>
+            <el-button :icon="Delete" type="danger" size="small">删除</el-button>
+        </template>
+    </el-popconfirm>
     </div>
-    <el-table :data="tableData.list" style="width: 100%;">
-        <el-table-column type="selection" width="55px" @selection-change="handleSelectionChange"></el-table-column>
+    <el-table :data="tableData.list" style="width: 100%;" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55px" ></el-table-column>
         <el-table-column prop="id" label="id"></el-table-column>
         <el-table-column prop="name" label="昵称"></el-table-column>
         <el-table-column label="头像">
@@ -124,10 +138,13 @@
 </template>
 
 <script setup>
-import { reactive, ref ,onMounted} from 'vue';
-import { Plus } from '@element-plus/icons-vue'
-import { photoList,companion,companionList } from '@/api';
+import { reactive, ref ,onMounted,nextTick} from 'vue';
+import { Plus,Delete,InfoFilled } from '@element-plus/icons-vue'
+import { photoList,companion,companionList,deleteCompanion } from '@/api';
 import { ElMessage } from 'element-plus';
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
 
 onMounted(() => {
     photoList().then(({ data }) => {
@@ -207,6 +224,8 @@ const confirm = async (formEl) => {
             if (data.code === 10000) {
                 ElMessage.success('success!')
                 beforeClose()
+                // 更新列表接口
+                getListData()
             } else {
                 ElMessage.error(data.message)
             }
@@ -217,12 +236,33 @@ const confirm = async (formEl) => {
     })
 }
 
-const open = () => {
+const open = (rowData = {}) => {
     dialogFormVisable.value = true
+    nextTick(() => {
+        // 如果是编辑,就使数据回显
+        if (rowData) {
+            Object.assign(form,rowData)
+        }
+    })
 }
 
-const handleSelectionChange = () => {
-    
+const selectTableData = ref([])
+const handleSelectionChange = (val) => {
+    selectTableData.value = val.map(item=>({ id:item.id}))
+}
+
+const confirmEvent = () => {
+    // 如果没有选择数据
+    if (selectTableData.value.length === 0) {
+        return ElMessage.warning("请选择至少一项数据")
+    }
+    // 选择了数据
+    deleteCompanion({ id: selectTableData.value }).then(({ data }) => {
+        // 删除成功居更新列表
+        if (data.code === 10000) {
+            getListData()
+        }
+    })
 }
 
 </script>
