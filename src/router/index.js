@@ -7,7 +7,6 @@ import Order from '@/views/vppz/order/index.vue'
 import Staff from '@/views/vppz/staff/index.vue'
 import Dashboard from '@/views/dashboard/index.vue'
 
-const localData = localStorage.getItem('pz_v3pz')
 
 const router = createRouter({
   // 路由匹配模式
@@ -19,6 +18,8 @@ const router = createRouter({
       component: Layout,
       name: 'main',
       redirect: to => {
+        // 确保每次都获取到最新的数据
+        const localData = localStorage.getItem('pz_v3pz')
         if (localData) {
           // 有子菜单
           const child = JSON.parse(localData).menu.routerList[0].children
@@ -28,9 +29,10 @@ const router = createRouter({
             return JSON.parse(localData).meta.routerList[0].children
           }
         } else {
-          return '/'
+          return '/login'
         }
       },
+      // 通过页面数据来判断并进行跳转，就不用下面的笨办法一个一个进行匹配了
       children: [
         // {
         //   path: 'dashboard',
